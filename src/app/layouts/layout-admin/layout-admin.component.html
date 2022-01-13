@@ -1,0 +1,31 @@
+<mat-sidenav-container class="sidenav-container">
+    <mat-sidenav #drawer class="sidenav sidenav_boxshadow" fixedInViewport [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'" [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="(isHandset$ | async) === false">
+        <div class="bg-header simple-text">
+            <div class="logo-img">
+                <img src="/assets/img/angular2-logo-red.png" />
+            </div>
+            <a>
+                Forum Management
+            </a>
+        </div>
+        <div class="line-top"></div>
+        <mat-nav-list>
+            <a mat-list-item *ngFor="let item of sidebar" [routerLink]="[item.path]" [ngClass]="{item_selected: clickedItem === item.icon}" (click)="selectNav(item.icon)">
+                <mat-icon matListIcon>{{item.icon}}</mat-icon>
+                <a matLine [ngClass]="{color_4d5c70: clickedItem !== item.icon}">{{item.title}}</a>
+            </a>
+        </mat-nav-list>
+        <div class="sidebar-background"></div>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <mat-toolbar>
+            <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()" *ngIf="isHandset$ | async">
+                <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+            </button>
+            <app-header class="col-md-12" [pageTitle]="getTitle()"></app-header>
+        </mat-toolbar>
+        <div class="grid-container">
+            <router-outlet></router-outlet>
+        </div>
+    </mat-sidenav-content>
+</mat-sidenav-container>

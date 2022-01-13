@@ -1,0 +1,151 @@
+<nz-card>
+    <!-- filter option -->
+    <div *ngIf="isShowFilter" class="filter-grid-option">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label class="control-label">Mã</label>
+                <input nz-input [(ngModel)]="codeFilter" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">Tên nhân viên</label>
+                <input nz-input [(ngModel)]="profileNameFilter" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">Tên đăng nhập</label>
+                <input nz-input [(ngModel)]="userLoginFilter" />
+            </div>
+
+            <div class="row">
+                <div class="form-group float-end" style="margin-top: 5px; text-align: right;">
+                    <button class="mr-4 cl-close" mat-flat-button (click)="closeFilter()">
+                        <span class="material-icons">highlight_off</span>
+                    </button>
+                    <button class="cl-search" mat-flat-button (click)="filterGrid()">
+                        <span class="material-icons">search</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- toolbar grid -->
+    <div class="row">
+        <div class="form-group toolbar-grid">
+            <div class="float-start">
+                <button class="mr-4 cl-search" mat-flat-button (click)="isShowFilter = !isShowFilter">
+                    <span class="material-icons">filter_alt</span>
+                </button>
+
+                <button class="mr-4 cl-add" mat-flat-button (click)="showAdd()">
+                    <span class="material-icons">add</span>
+                </button>
+
+                <button class="mr-4 cl-edit" mat-flat-button (click)="showEdit()" *ngIf="isShowEdit">
+                    <span class="material-icons">edit</span>
+                </button>
+            </div>
+
+            <div class="float-end">
+                <button class="mr-4 cl-delete" mat-flat-button *ngIf="isShowDelete" (click)="handleDelete()"> 
+                    <span class="material-icons">delete_forever</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Grid -->
+    <nz-table #basicTable [nzData]="dataGridUserInfo" nzBordered nzSize="middle" [nzPageSize]="20" [nzLoading]="isUserInfoGridLoading" [nzScroll]="{ x: '1100px', y: '475px'}">
+        <thead>
+            <tr>
+                <th nzWidth="40px" [nzChecked]="checked" [nzIndeterminate]="indeterminate" (nzCheckedChange)="onAllChecked($event)"></th>
+                <th nzWidth="80px">Mã NV</th>
+                <th nzWidth="150px">Tên nhân viên</th>
+                <th nzWidth="150px">Phòng ban</th>
+                <th nzWidth="120px">Tên đăng nhập</th>
+                <th nzWidth="120px">Nhóm quyền</th>
+                <th nzWidth="120px">Trạng thái</th>
+                <th nzWidth="200px">Ghi chú</th>
+                <th nzWidth="120px">Người cập nhật</th>
+                <th nzWidth="150px">Ngày cập nhật</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let data of basicTable.data">
+                <td [nzChecked]="setOfCheckedId.has(data.id)" (nzCheckedChange)="onItemChecked(data.id, $event)">
+                </td>
+                <td>{{ data.code }}</td>
+                <td>{{ data.profileName }}</td>
+                <td>{{ data.orgStructureName }}</td>
+                <td>{{ data.userLogin }}</td>
+                <td>{{ data.permission }}</td>
+                <td>{{ data.isActiveView }}</td>
+                <td>{{ data.note }}</td>
+                <td>{{ data.userUpdate }}</td>
+                <td>{{ data.dateUpdate | date:'dd/MM/yyyy HH:mm' }}</td>
+            </tr>
+        </tbody>
+    </nz-table>
+</nz-card>
+
+<!-- Form add/edit -->
+<nz-modal [(nzVisible)]="isShowFormAdd" [nzTitle]="modalTitle" [nzContent]="modalContent" [nzFooter]="modalFooter" [nzMaskClosable]="false" [nzClosable]="false" [nzWidth]="600" (nzOnCancel)="handleCancel()">
+    <ng-template #modalContent>
+        <form nz-form [nzAutoTips]="autoTips" [formGroup]="validateFormAddOrEdit" (ngSubmit)="handleSubmit()">
+            <nz-form-item>
+                <nz-form-label [nzSpan]="7" nzRequired>Nhân viên</nz-form-label>
+                <nz-form-control [nzSpan]="15">
+                    <nz-select [(ngModel)]="selectedProfile" formControlName="profileName" [compareWith]="compareProfile" (ngModelChange)="changeProfile($event)" nzAllowClear nzPlaceHolder="Vui lòng chọn..." [nzDisabled]="isEdit">
+                        <nz-option *ngFor="let profile of listProfile" [nzValue]="profile" [nzLabel]="profile.label"></nz-option>
+                    </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+                <nz-form-label [nzSpan]="7" nzRequired>Tên đăng nhập</nz-form-label>
+                <nz-form-control [nzSpan]="15" nzValidatingTip="Validating...">
+                    <input nz-input formControlName="userLogin" />
+                </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+                <nz-form-label [nzSpan]="7" nzRequired>Mật khẩu</nz-form-label>
+                <nz-form-control [nzSpan]="15" nzValidatingTip="Validating...">
+                    <input [type]="passwordVisible ? 'text' : 'password'" nz-input formControlName="password" />
+                </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+                <nz-form-label [nzSpan]="7" nzRequired>Nhóm quyền</nz-form-label>
+                <nz-form-control [nzSpan]="15">
+                    <nz-select [(ngModel)]="selectedPermission" formControlName="permisson" [compareWith]="comparePermission" (ngModelChange)="changePermission($event)" nzAllowClear nzPlaceHolder="Vui lòng chọn...">
+                        <nz-option *ngFor="let permisson of listPermission" [nzValue]="permisson" [nzLabel]="permisson.label"></nz-option>
+                    </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+                <nz-form-label [nzSpan]="7">Kích hoạt</nz-form-label>
+                <nz-form-control [nzSpan]="15" nzValidatingTip="Validating...">
+                    <label nz-checkbox formControlName="isActive"></label>
+                </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+                <nz-form-label [nzSpan]="7">Ghi chú</nz-form-label>
+                <nz-form-control [nzSpan]="15" nzValidatingTip="Validating...">
+                    <textarea formControlName="note" nz-input rows="3"></textarea>
+                </nz-form-control>
+            </nz-form-item>
+        </form>
+    </ng-template>
+
+    <ng-template #modalFooter>
+        <button class="mr-4 cl-close" mat-flat-button (click)="handleCancel()" [disabled]="isSaveLoading">
+            <span class="material-icons">highlight_off</span>
+        </button>
+
+        <button class="cl-save" mat-flat-button (click)="handleSubmit()" [disabled]="isSaveLoading">
+            <span class="material-icons">save</span>
+        </button>
+    </ng-template>
+</nz-modal>

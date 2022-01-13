@@ -1,0 +1,139 @@
+<nz-card>
+    <!-- filter option -->
+    <div *ngIf="isShowFilter" class="filter-grid-option">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label class="control-label">Tiêu đề</label>
+                <input nz-input [(ngModel)]="titleFilter" />
+            </div>
+            <div class="form-group">
+                <label class="control-label col-12">Danh mục</label>
+                <nz-select class="col-12" [(ngModel)]="selectedCatFilter" nzAllowClear nzPlaceHolder="Vui lòng chọn...">
+                    <nz-option *ngFor="let category of listCategory" [nzValue]="category" [nzLabel]="category.label"></nz-option>
+                </nz-select>
+            </div>
+            <div class="row">
+                <div class="form-group float-end" style="margin-top: 5px; text-align: right;">
+                    <button class="mr-4 cl-close" mat-flat-button (click)="closeFilter()">
+                      <span class="material-icons">highlight_off</span>
+                  </button>
+                    <button class="cl-search" mat-flat-button (click)="filterGrid()">
+                      <span class="material-icons">search</span>
+                  </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- toolbar grid -->
+    <div class="row">
+        <div class="form-group toolbar-grid">
+            <div class="float-start">
+                <button class="mr-4 cl-search" mat-flat-button (click)="isShowFilter = !isShowFilter">
+                  <span class="material-icons">filter_alt</span>
+              </button>
+
+                <button class="mr-4 cl-add" mat-flat-button (click)="showAdd()">
+                  <span class="material-icons">add</span>
+              </button>
+
+                <button class="mr-4 cl-edit" mat-flat-button (click)="showEdit()" *ngIf="isShowEdit">
+                  <span class="material-icons">edit</span>
+              </button>
+            </div>
+
+            <div class="float-end">
+                <button class="mr-4 cl-delete" mat-flat-button *ngIf="isShowDelete" (click)="handleDelete()"> 
+                  <span class="material-icons">delete_forever</span>
+              </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Grid -->
+    <nz-table #basicTable [nzData]="dataGridPostItem" nzBordered nzSize="middle" [nzPageSize]="20" [nzLoading]="isPostItemGridLoading" [nzScroll]="{ x: '1100px', y: '475px'}">
+        <thead>
+            <tr>
+                <th nzWidth="40px" [nzChecked]="checked" [nzIndeterminate]="indeterminate" (nzCheckedChange)="onAllChecked($event)"></th>
+                <th nzWidth="150px">Tiêu đề</th>
+                <th nzWidth="80px">Danh mục</th>
+                <th nzWidth="80px">Người cập nhật</th>
+                <th nzWidth="80px">Ngày cập nhật</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let data of basicTable.data">
+                <td [nzChecked]="setOfCheckedId.has(data.id)" (nzCheckedChange)="onItemChecked(data.id, $event)">
+                </td>
+                <td>{{ data.title }}</td>
+                <td>{{ data.categoryName }}</td>
+                <td>{{ data.userUpdate }}</td>
+                <td>{{ data.dateUpdate | date:'dd/MM/yyyy HH:mm' }}</td>
+            </tr>
+        </tbody>
+    </nz-table>
+</nz-card>
+
+<!-- Form add/edit -->
+<nz-modal [(nzVisible)]="isShowFormAdd" [nzTitle]="modalTitle" [nzContent]="modalContent" [nzFooter]="modalFooter" [nzMaskClosable]="false" [nzClosable]="false" [nzWidth]="1000" (nzOnCancel)="handleCancel()">
+    <ng-template #modalContent>
+        <form nz-form [nzAutoTips]="autoTips" [formGroup]="validateFormAddOrEdit" (ngSubmit)="handleSubmit()">
+            <div nz-row [nzGutter]="16">
+                <div nz-col class="gutter-row" [nzSpan]="18">
+                    <nz-form-item>
+                        <nz-form-label [nzSpan]="24" labelAlign="left" nzRequired>Tiêu đề</nz-form-label>
+                        <nz-form-control [nzSpan]="24" nzValidatingTip="Validating...">
+                            <input nz-input formControlName="title" />
+                        </nz-form-control>
+                    </nz-form-item>
+
+                    <nz-form-item>
+                        <nz-form-label [nzSpan]="24">Nội dung</nz-form-label>
+                        <nz-form-control [nzSpan]="24" nzValidatingTip="Validating...">
+                            <editor apiKey="nj5hnwunmzaa9fxurzdnmmzbk9a55jyj5kbcv4wxg61zbotr" formControlName="content" [init]="{
+                              icons: 'material',
+                              skin: 'borderless',
+                              plugins: 'wordcount',
+                              menubar: false,
+                              min_height: 400
+                            }">
+                            </editor>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+                <div nz-col class="gutter-row" [nzSpan]="6">
+                    <nz-form-item>
+                        <nz-form-label [nzSpan]="24" nzRequired>Danh mục</nz-form-label>
+                        <nz-form-control [nzSpan]="24">
+                            <nz-select [(ngModel)]="selectedCategory" formControlName="categoryName" [compareWith]="compareCategory" (ngModelChange)="eventChangeCat($event)" nzAllowClear nzPlaceHolder="Vui lòng chọn...">
+                                <nz-option *ngFor="let category of listCategory" [nzValue]="category" [nzLabel]="category.label"></nz-option>
+                            </nz-select>
+                        </nz-form-control>
+                    </nz-form-item>
+
+                    <nz-form-item>
+                        <nz-form-label [nzSpan]="24">Banner</nz-form-label>
+                        <nz-form-control [nzSpan]="24" class="border-image">
+                            <div nz-col class="gutter-row text-center" [nzSpan]="24">
+                                <img [src]='imageUrl' class="img-avatar" (click)="avtID.click()">
+                                <br>
+                                <input #avtID class="hide" type="file" (change)="onSelectFile($event)">
+                            </div>
+                        </nz-form-control>
+
+                    </nz-form-item>
+                </div>
+            </div>
+        </form>
+    </ng-template>
+
+    <ng-template #modalFooter>
+        <button class="mr-4 cl-close" mat-flat-button (click)="handleCancel()" [disabled]="isSaveLoading">
+          <span class="material-icons">highlight_off</span>
+        </button>
+
+        <button class="cl-save" mat-flat-button (click)="handleSubmit()" [disabled]="isSaveLoading">
+          <span class="material-icons">save</span>
+        </button>
+    </ng-template>
+</nz-modal>

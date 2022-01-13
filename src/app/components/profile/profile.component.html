@@ -1,0 +1,232 @@
+<nz-card>
+    <!-- filter option -->
+    <div *ngIf="isShowFilter" class="filter-grid-option">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label class="control-label">Mã</label>
+                <input nz-input [(ngModel)]="codeFilter" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">Tên nhân viên</label>
+                <input nz-input [(ngModel)]="profileNameFilter" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">Ngày sinh từ</label>
+                <nz-date-picker class="width_date_search" [nzFormat]="'dd-MM-YYYY'" [(ngModel)]="birthdayForm" nzPlaceHolder="Vui lòng chọn..."></nz-date-picker>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Ngày sinh đến</label>
+                <nz-date-picker class="width_date_search" [nzFormat]="'dd-MM-YYYY'" [(ngModel)]="birthdayTo" nzPlaceHolder="Vui lòng chọn..."></nz-date-picker>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-12">Phòng ban</label>
+                <nz-select class="col-12" [(ngModel)]="selectedOrgFilter" nzAllowClear nzPlaceHolder="Vui lòng chọn...">
+                    <nz-option *ngFor="let orgStructure of listOrg" [nzValue]="orgStructure" [nzLabel]="orgStructure.label"></nz-option>
+                </nz-select>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Chức danh</label>
+                <input nz-input [(ngModel)]="jobTitleFilter" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">Chức vụ</label>
+                <input nz-input [(ngModel)]="positionFilter" />
+            </div>
+
+            <div class="row">
+                <div class="form-group float-end" style="margin-top: 5px; text-align: right;">
+                    <button class="mr-4 cl-close" mat-flat-button (click)="closeFilter()">
+                        <span class="material-icons">highlight_off</span>
+                    </button>
+                    <button class="cl-search" mat-flat-button (click)="filterGrid()">
+                        <span class="material-icons">search</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- toolbar grid -->
+    <div class="row">
+        <div class="form-group toolbar-grid">
+            <div class="float-start">
+                <button class="mr-4 cl-search" mat-flat-button (click)="isShowFilter = !isShowFilter">
+                    <span class="material-icons">filter_alt</span>
+                </button>
+
+                <button class="mr-4 cl-add" mat-flat-button (click)="showAdd()">
+                    <span class="material-icons">add</span>
+                </button>
+
+                <button class="mr-4 cl-edit" mat-flat-button (click)="showEdit()" *ngIf="isShowEdit">
+                    <span class="material-icons">edit</span>
+                </button>
+            </div>
+
+            <div class="float-end">
+                <button class="mr-4 cl-delete" mat-flat-button *ngIf="isShowDelete" (click)="handleDelete()"> 
+                    <span class="material-icons">delete_forever</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Grid -->
+    <nz-table #basicTable [nzData]="dataGridProfile" nzBordered nzSize="middle" [nzPageSize]="20" [nzLoading]="isProfileGridLoading" [nzScroll]="{ x: '1100px', y: '475px'}">
+        <thead>
+            <tr>
+                <th nzWidth="40px" [nzChecked]="checked" [nzIndeterminate]="indeterminate" (nzCheckedChange)="onAllChecked($event)"></th>
+                <th nzWidth="80px">Mã</th>
+                <th nzWidth="150px">Tên nhân viên</th>
+                <th nzWidth="100px">Ngày sinh</th>
+                <th nzWidth="80px">Giới tính</th>
+                <th nzWidth="120px">Số CMND/CCCD</th>
+                <th nzWidth="200px">Email</th>
+                <th nzWidth="150px">Chức danh</th>
+                <th nzWidth="150px">Chức vụ</th>
+                <th nzWidth="180px">Phòng ban</th>
+                <th nzWidth="150px">Địa chỉ </th>
+                <th nzWidth="150px">Ghi chú</th>
+                <th nzWidth="120px">Người cập nhật</th>
+                <th nzWidth="140px">Ngày cập nhật</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let data of basicTable.data">
+                <td [nzChecked]="setOfCheckedId.has(data.id)" (nzCheckedChange)="onItemChecked(data.id, $event)">
+                </td>
+                <td>{{ data.code }}</td>
+                <td>{{ data.profileName }}</td>
+                <td>{{ data.birthday | date:'dd/MM/yyyy' }}</td>
+                <td>{{ data.sexView }}</td>
+                <td>{{ data.cardID }}</td>
+                <td>{{ data.email }}</td>
+                <td>{{ data.jobTitle }}</td>
+                <td>{{ data.position }}</td>
+                <td>{{ data.orgStructureName }}</td>
+                <td>{{ data.address }}</td>
+                <td>{{ data.note }}</td>
+                <td>{{ data.userUpdate }}</td>
+                <td>{{ data.dateUpdate | date:'dd/MM/yyyy HH:mm' }}</td>
+            </tr>
+        </tbody>
+    </nz-table>
+</nz-card>
+
+<!-- Form add/edit -->
+<nz-modal [(nzVisible)]="isShowFormAdd" [nzTitle]="modalTitle" [nzContent]="modalContent" [nzFooter]="modalFooter" [nzMaskClosable]="false" [nzClosable]="false" [nzWidth]="800" (nzOnCancel)="handleCancel()">
+    <ng-template #modalContent>
+        <form nz-form [nzAutoTips]="autoTips" [formGroup]="validateFormAddOrEdit" (ngSubmit)="handleSubmit()">
+            <div nz-row [nzGutter]="16">
+                <div nz-col class="gutter-row" [nzSpan]="12">
+                    <nz-form-item>
+                        <nz-form-label [nzSpan]="8" labelAlign="left" nzRequired>Mã</nz-form-label>
+                        <nz-form-control [nzSpan]="16" nzValidatingTip="Validating...">
+                            <input nz-input formControlName="code" />
+                        </nz-form-control>
+                    </nz-form-item>
+
+                    <nz-form-item>
+                        <nz-form-label [nzSpan]="8" nzRequired>Tên nhân viên</nz-form-label>
+                        <nz-form-control [nzSpan]="16" nzValidatingTip="Validating...">
+                            <input nz-input formControlName="profileName" />
+                        </nz-form-control>
+                    </nz-form-item>
+
+                    <nz-form-item>
+                        <nz-form-label [nzSpan]="8" nzRequired>Ngày sinh</nz-form-label>
+                        <nz-form-control [nzSpan]="16" nzValidatingTip="Validating...">
+                            <nz-date-picker class="width_birthday" [nzFormat]="'dd-MM-YYYY'" formControlName="birthday" nzPlaceHolder="Vui lòng chọn..."></nz-date-picker>
+                        </nz-form-control>
+                    </nz-form-item>
+
+                    <nz-form-item>
+                        <nz-form-label [nzSpan]="8" labelAlign="left" nzRequired>Số CMND/CCCD</nz-form-label>
+                        <nz-form-control [nzSpan]="16" nzValidatingTip="Validating...">
+                            <input nz-input type="text" formControlName="cardID" />
+                        </nz-form-control>
+                    </nz-form-item>
+
+                    <nz-form-item>
+                        <nz-form-label [nzSpan]="8" labelAlign="left" nzRequired>Email </nz-form-label>
+                        <nz-form-control [nzSpan]="16" nzValidatingTip="Validating...">
+                            <input nz-input type="text" formControlName="email" />
+                        </nz-form-control>
+                    </nz-form-item>
+
+                    <nz-form-item>
+                        <nz-form-label [nzSpan]="8" labelAlign="left">Số điện thoại</nz-form-label>
+                        <nz-form-control [nzSpan]="16">
+                            <input nz-input type="text" formControlName="phoneNumber" />
+                        </nz-form-control>
+                    </nz-form-item>
+
+                    <nz-form-item>
+                        <nz-form-label [nzSpan]="8">Địa chỉ</nz-form-label>
+                        <nz-form-control [nzSpan]="16">
+                            <textarea formControlName="address" nz-input rows="5"></textarea>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+
+                <div nz-col class="gutter-row" [nzSpan]="12">
+                    <div nz-col class="gutter-row text-center" [nzSpan]="24" style="margin-bottom: 33px;">
+                        <img [src]='avatarUrl' class="img-avatar" (click)="avtID.click()">
+                        <br>
+                        <input #avtID class="hide" type="file" (change)="onSelectFile($event)">
+                    </div>
+
+                    <nz-form-item>
+                        <nz-form-label [nzSpan]="8" nzRequired>Giới tính</nz-form-label>
+                        <nz-form-control [nzSpan]="16">
+                            <mat-radio-group>
+                                <mat-radio-button class="mr-r25" [checked]="!isCheckSex" (change)="setValueSex($event)" value="0">Nam</mat-radio-button>
+                                <mat-radio-button [checked]="isCheckSex" (change)="setValueSex($event)" value="1">Nữ</mat-radio-button>
+                            </mat-radio-group>
+                        </nz-form-control>
+                    </nz-form-item>
+
+                    <nz-form-item>
+                        <nz-form-label [nzSpan]="8" nzRequired>Phòng ban</nz-form-label>
+                        <nz-form-control [nzSpan]="16">
+                            <nz-select [(ngModel)]="selectedOrg" formControlName="orgStructureName" [compareWith]="compareOrg" (ngModelChange)="eventChangeOrg($event)" nzAllowClear nzPlaceHolder="Vui lòng chọn...">
+                                <nz-option *ngFor="let orgStructure of listOrg" [nzValue]="orgStructure" [nzLabel]="orgStructure.label"></nz-option>
+                            </nz-select>
+                        </nz-form-control>
+                    </nz-form-item>
+
+                    <nz-form-item>
+                        <nz-form-label [nzSpan]="8" labelAlign="left" nzRequired>Chức danh</nz-form-label>
+                        <nz-form-control [nzSpan]="16" nzValidatingTip="Validating...">
+                            <input nz-input type="text" formControlName="jobTitle" />
+                        </nz-form-control>
+                    </nz-form-item>
+
+                    <nz-form-item>
+                        <nz-form-label [nzSpan]="8" labelAlign="left" nzRequired>Chức vụ</nz-form-label>
+                        <nz-form-control [nzSpan]="16" nzValidatingTip="Validating...">
+                            <input nz-input type="text" formControlName="position" />
+                        </nz-form-control>
+                    </nz-form-item>
+
+                    <nz-form-item>
+                        <nz-form-label [nzSpan]="8">Ghi chú</nz-form-label>
+                        <nz-form-control [nzSpan]="16">
+                            <textarea formControlName="note" nz-input rows="2"></textarea>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+            </div>
+        </form>
+    </ng-template>
+
+    <ng-template #modalFooter>
+        <button class="mr-4 cl-close" mat-flat-button (click)="handleCancel()" [disabled]="isSaveLoading">
+            <span class="material-icons">highlight_off</span>
+        </button>
+
+        <button class="cl-save" mat-flat-button (click)="handleSubmit()" [disabled]="isSaveLoading">
+            <span class="material-icons">save</span>
+        </button>
+    </ng-template>
+</nz-modal>

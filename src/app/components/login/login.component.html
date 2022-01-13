@@ -1,0 +1,50 @@
+<div class="container-login100">
+    <div class="form-login">
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+            <!-- <div class="header-login">
+            </div> -->
+
+            <span class="login100-form-title p-b-43">
+                Đăng nhập với tài khoản của bạn
+            </span>
+
+            <mat-form-field class="example-full-width" appearance="fill">
+                <mat-label for="userName">Tên đăng nhập</mat-label>
+                <input type="text" matInput formControlName="userName" [ngClass]="{ 'is-invalid': submitted && isRequiredUserName }" />
+                <mat-error *ngIf="submitted && isRequiredUserName">
+                    <div *ngIf="isRequiredUserName">Vui lòng nhập tên đăng nhập!</div>
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="example-full-width" appearance="fill">
+                <mat-label for="password">Mật khẩu</mat-label>
+                <input type="password" matInput formControlName="password" [ngClass]="{ 'is-invalid': submitted && isRequiredPassword }" />
+                <mat-error *ngIf="submitted && isRequiredPassword">
+                    <div *ngIf="isRequiredPassword">Vui lòng nhập mật khẩu!</div>
+                </mat-error>
+            </mat-form-field>
+
+            <div class="row">
+                <div class="col-md-6" style="float: left;">
+                    <section class="example-section">
+                        <mat-checkbox>Ghi nhớ đăng nhập</mat-checkbox>
+                    </section>
+                </div>
+                <div class="col-md-6 txt-forgot-pw">
+                    Quên mật khẩu?
+                </div>
+            </div>
+
+            <div class="example-button-row">
+                <button mat-raised-button class="btn btn-primary wd-btn-login" [disabled]="loading">
+                    <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                    Đăng nhập
+                </button>
+            </div>
+
+        </form>
+    </div>
+    <div class="bg-login">
+
+    </div>
+</div>

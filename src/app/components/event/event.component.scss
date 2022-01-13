@@ -1,0 +1,102 @@
+.img-avatar {
+    width: 100%;
+    height: 126px;
+    object-fit: cover;
+}
+
+.width_birthday {
+    width: 160px;
+}
+
+.w-50 {
+    width: 50%;
+    float: left !important;
+}
+
+.border-image {
+    border: 1px solid #d9d9d9;
+    background-color: white;
+}
+
+.group-btn-save {
+    text-align: center;
+}
+
+.group-btn-save .mat-flat-button {
+    min-width: 46px !important;
+    line-height: 32px !important;
+    padding: 0px 12px !important;
+}
+
+.group-btn-save .cl-save {
+    background-color: #19a9d5;
+    color: white;
+}
+
+.mr-btn-save {
+    margin-top: 16px;
+}
+
+.title-section {
+    color: #096dd9;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.mr-bottom {
+    margin-bottom: 10px;
+}
+
+.bg-white {
+    background-color: white;
+}
+
+.width-date-detail {
+    width: 100%;
+}
+
+:host ::ng-deep .ant-table.ant-table-bordered.ant-table-middle>.ant-table-container>.ant-table-body>table>tbody>tr>td>.ant-table-expanded-row-fixed {
+    width: 100% !important;
+}
+
+.col-md-2.float-start .material-icons {
+    font-size: 18px;
+    color: red;
+}
+
+.file-name {
+    padding: 0 5px;
+    color: #1890ff;
+    white-space: nowrap;
+    width: 230px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.bt-upload {
+    width: 264px;
+    line-height: 28px;
+    border: 1px solid transparent;
+    border-radius: 2px;
+    color: #424242;
+    border-color: #d9d9d9;
+    background: #fff;
+    font-weight: 400;
+    font-size: 14px;
+}
+
+.bt-upload .material-icons {
+    font-size: 18px !important;
+}
+
+.cl-close:hover {
+    color: white;
+}
+
+.waiting {
+    color: #FAAD15;
+}
+
+.success {
+    color: #15b715;
+}

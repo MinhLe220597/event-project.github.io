@@ -1,0 +1,135 @@
+@import '~bootstrap/dist/css/bootstrap.min.css';
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+    overflow: auto;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #aaa;
+    border-radius: 10px;
+}
+
+.icon-edit-grid {
+    font-size: 18px;
+    color: orange !important;
+}
+
+.icon-close-filter-grid {
+    font-size: 16px;
+    color: rgb(0 0 0 / 85%) !important;
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+
+.form-group {
+    margin-bottom: 4px !important;
+}
+
+.filter-grid-option {
+    top: 64px;
+    position: fixed;
+    z-index: 999;
+    background: #fff;
+    width: 300px;
+    height: 100%;
+    right: 0px;
+    padding: 15px;
+    transition: 0.2s;
+    overflow-x: hidden;
+    overflow-y: overlay;
+    box-shadow: 0 16px 38px -12px rgb(0 0 0 / 56%), 0 4px 25px 0 rgb(0 0 0 / 12%), 0 8px 10px -5px rgb(0 0 0 / 20%);
+    border-radius: 0px !important;
+}
+
+.btn-search-option {
+    position: fixed;
+    bottom: 2px;
+}
+
+.wd-btn-search {
+    width: 270px;
+}
+
+.mr-4 {
+    margin-right: 4px !important;
+}
+
+.toolbar-grid .mat-flat-button,
+.ant-modal-footer .mat-flat-button,
+.filter-grid-option .mat-flat-button {
+    min-width: 46px !important;
+    line-height: 32px !important;
+    padding: 0px 12px !important;
+}
+
+.toolbar-grid .material-icons,
+.ant-modal-footer .material-icons,
+.filter-grid-option .mat-flat-button {
+    font-size: 22px !important;
+}
+
+.cl-search {
+    background-color: #0971DC;
+    color: white;
+}
+
+.cl-close {
+    background-color: #b1b1b1;
+    color: white;
+}
+
+.toolbar-grid .cl-add {
+    background-color: #04BF8A;
+    color: white;
+}
+
+.toolbar-grid .cl-edit {
+    background-color: #FAAD15;
+    color: white;
+}
+
+.toolbar-grid .cl-noti {
+    background-color: #3dc4e3;
+    color: white;
+}
+
+.toolbar-grid .cl-delete {
+    background-color: white;
+    color: #F5222D;
+}
+
+.ant-modal-footer .cl-save {
+    background-color: #19a9d5;
+    color: white;
+}
+
+.ant-modal-body {
+    background-color: #fbfbfb !important;
+}
+
+.ant-form-item-explain {
+    font-size: 12px !important;
+}
+
+.hide {
+    display: none !important;
+}
+
+.width_date_search {
+    width: 270px;
+}
+
+.ant-modal-header .ant-modal-title .ng-star-inserted {
+    color: #096dd9;
+}

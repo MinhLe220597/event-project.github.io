@@ -1,0 +1,395 @@
+<nz-card>
+    <!-- filter option -->
+    <div *ngIf="isShowFilter" class="filter-grid-option">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label class="control-label">Tiêu đề</label>
+                <input nz-input [(ngModel)]="titleFilter" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">Từ ngày</label>
+                <nz-date-picker class="width_date_search" [nzFormat]="'dd-MM-YYYY'" [(ngModel)]="dateForm" nzPlaceHolder="Vui lòng chọn..."></nz-date-picker>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Đến ngày</label>
+                <nz-date-picker class="width_date_search" [nzFormat]="'dd-MM-YYYY'" [(ngModel)]="dateTo" nzPlaceHolder="Vui lòng chọn..."></nz-date-picker>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-12">Danh mục</label>
+                <nz-select class="col-12" [(ngModel)]="selectedCatFilter" nzAllowClear nzPlaceHolder="Vui lòng chọn...">
+                    <nz-option *ngFor="let category of listCategory" [nzValue]="category" [nzLabel]="category.label"></nz-option>
+                </nz-select>
+            </div>
+
+            <div class="row">
+                <div class="form-group float-end" style="margin-top: 5px; text-align: right;">
+                    <button class="mr-4 cl-close" mat-flat-button (click)="closeFilter()">
+                        <span class="material-icons">highlight_off</span>
+                    </button>
+                    <button class="cl-search" mat-flat-button (click)="filterGrid()">
+                        <span class="material-icons">search</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- toolbar grid -->
+    <div class="row">
+        <div class="form-group toolbar-grid">
+            <div class="float-start">
+                <button class="mr-4 cl-search" mat-flat-button (click)="isShowFilter = !isShowFilter">
+                    <span class="material-icons">filter_alt</span>
+                </button>
+
+                <button class="mr-4 cl-add" mat-flat-button (click)="showAdd()">
+                    <span class="material-icons">add</span>
+                </button>
+
+                <button class="mr-4 cl-edit" mat-flat-button (click)="showEdit()" *ngIf="isShowEdit">
+                    <span class="material-icons">edit</span>
+                </button>
+
+                <button class="mr-4 cl-noti" mat-flat-button (click)="showNoti()" *ngIf="isShowEdit">
+                    <span class="material-icons">notifications</span>
+                </button>
+            </div>
+
+            <div class="float-end">
+                <button class="mr-4 cl-delete" mat-flat-button *ngIf="isShowDelete" (click)="handleDelete()"> 
+                    <span class="material-icons">delete_forever</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Grid -->
+    <nz-table #basicTable [nzData]="dataGridEvent" nzBordered nzSize="middle" [nzPageSize]="20" [nzLoading]="isEventGridLoading" [nzScroll]="{ x: '1600px', y: '475px'}">
+        <thead>
+            <tr>
+                <th nzWidth="40px" [nzChecked]="checked" [nzIndeterminate]="indeterminate" (nzCheckedChange)="onAllChecked($event)"></th>
+                <th nzWidth="200px">Tiêu đề</th>
+                <th nzWidth="150px">Ngày bắt đầu</th>
+                <th nzWidth="150px">Ngày kết thúc</th>
+                <th nzWidth="120px">Chủ đề</th>
+                <th nzWidth="150px">Địa điểm</th>
+                <th nzWidth="200px">Ghi chú</th>
+                <th nzWidth="120px">Người cập nhật</th>
+                <th nzWidth="150px">Ngày cập nhật</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let data of basicTable.data">
+                <td [nzChecked]="setOfCheckedId.has(data.id)" (nzCheckedChange)="onItemChecked(data.id, $event)">
+                </td>
+                <td>{{ data.title }}</td>
+                <td>{{ data.dateStart | date:'dd/MM/yyyy' }}</td>
+                <td>{{ data.dateStart | date:'dd/MM/yyyy' }}</td>
+                <td>{{ data.categoryName }}</td>
+                <td>{{ data.address }}</td>
+                <td>{{ data.note }}</td>
+                <td>{{ data.userUpdate }}</td>
+                <td>{{ data.dateUpdate | date:'dd/MM/yyyy HH:mm' }}</td>
+            </tr>
+        </tbody>
+    </nz-table>
+</nz-card>
+
+<!-- Form add/edit -->
+<nz-modal [(nzVisible)]="isShowFormAdd" [nzTitle]="modalTitle" [nzContent]="modalContent" [nzMaskClosable]="false" [nzFooter]="null" [nzClosable]="false" [nzWidth]="1000" (nzOnCancel)="handleCancel()">
+    <ng-template #modalContent>
+        <form nz-form [nzAutoTips]="autoTips" [formGroup]="validateFormAddOrEdit" (ngSubmit)="handleSubmit()">
+            <div nz-row [nzGutter]="16">
+                <div nz-col class="gutter-row" [nzSpan]="18">
+                    <nz-form-item>
+                        <nz-form-label [nzSpan]="24" labelAlign="left" nzRequired>Tiêu đề</nz-form-label>
+                        <nz-form-control [nzSpan]="24" nzValidatingTip="Validating...">
+                            <input nz-input formControlName="title" />
+                        </nz-form-control>
+                    </nz-form-item>
+                    <div class="w-50">
+                        <nz-form-item>
+                            <nz-form-label [nzSpan]="24" nzRequired>Ngày diễn ra</nz-form-label>
+                            <nz-form-control [nzSpan]="12" nzValidatingTip="Validating...">
+                                <nz-date-picker class="width_birthday" [nzFormat]="'dd-MM-YYYY'" formControlName="dateStart" nzPlaceHolder="Từ ngày..."></nz-date-picker>
+                            </nz-form-control>
+                            <nz-form-control [nzSpan]="12" nzValidatingTip="Validating...">
+                                <nz-date-picker class="width_birthday" [nzFormat]="'dd-MM-YYYY'" formControlName="dateEnd" nzPlaceHolder="Đến ngày..."></nz-date-picker>
+                            </nz-form-control>
+                        </nz-form-item>
+
+                        <nz-form-item>
+                            <nz-form-label [nzSpan]="24">Địa điểm</nz-form-label>
+                            <nz-form-control [nzSpan]="23">
+                                <textarea formControlName="address" nz-input rows="2"></textarea>
+                            </nz-form-control>
+                        </nz-form-item>
+                    </div>
+                    <div class="w-50">
+                        <nz-form-item>
+                            <nz-form-label [nzSpan]="24" nzRequired>Chủ đề</nz-form-label>
+                            <nz-form-control [nzSpan]="24">
+                                <nz-select [(ngModel)]="selectedCategory" formControlName="categoryName" [compareWith]="compareCategory" (ngModelChange)="eventChangeCat($event)" nzAllowClear nzPlaceHolder="Vui lòng chọn...">
+                                    <nz-option *ngFor="let category of listCategory" [nzValue]="category" [nzLabel]="category.label"></nz-option>
+                                </nz-select>
+                            </nz-form-control>
+                        </nz-form-item>
+
+                        <nz-form-item>
+                            <nz-form-label [nzSpan]="24">Ghi chú</nz-form-label>
+                            <nz-form-control [nzSpan]="24">
+                                <textarea formControlName="note" nz-input rows="2"></textarea>
+                            </nz-form-control>
+                        </nz-form-item>
+                    </div>
+                </div>
+                <div nz-col class="gutter-row" [nzSpan]="6">
+                    <nz-form-item>
+                        <nz-form-label [nzSpan]="24" class="text-center">Banner</nz-form-label>
+                        <nz-form-control [nzSpan]="24" class="border-image">
+                            <div nz-col class="gutter-row text-center" [nzSpan]="24">
+                                <img [src]='imageUrl' class="img-avatar" (click)="avtID.click()">
+                                <br>
+                                <input #avtID class="hide" type="file" (change)="onSelectFile($event)">
+                            </div>
+                        </nz-form-control>
+                    </nz-form-item>
+
+                    <nz-form-item class="group-btn-save">
+                        <nz-form-label [nzSpan]="24"></nz-form-label>
+                        <nz-form-control [nzSpan]="24" class="mr-btn-save">
+                            <a class="mr-4 cl-close" mat-flat-button (click)="handleCancel()" [disabled]="isSaveLoading">
+                                <span class="material-icons">highlight_off</span>
+                            </a>
+
+                            <a class="cl-save" mat-flat-button (click)="handleSubmit()" [disabled]="isSaveLoading">
+                                <span class="material-icons">save</span>
+                            </a>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+            </div>
+        </form>
+
+        <nz-form-item class="bg-white" *ngIf="isShowDetail">
+            <div class="col-md-12 mr-bottom">
+                <span class="title-section">DS Phiên họp</span>
+            </div>
+            <!-- toolbar grid -->
+            <div class="col-md-12 form-group">
+                <div class="toolbar-grid">
+                    <div class="float-start">
+                        <button class="mr-4 cl-add" mat-flat-button (click)="showAddDetail()">
+                            <span class="material-icons">add</span>
+                        </button>
+
+                        <button class="mr-4 cl-edit" mat-flat-button (click)="showEditDetail()" *ngIf="isShowEditDetail">
+                            <span class="material-icons">edit</span>
+                        </button>
+                    </div>
+
+                    <div class="float-end">
+                        <button class="mr-4 cl-delete" mat-flat-button *ngIf="isShowDeleteDetail" (click)="handleDeleteDetail()"> 
+                            <span class="material-icons">delete_forever</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <nz-table #basicTableDetail [nzData]="dataGridEventDetail" nzBordered nzSize="middle" [nzPageSize]="20" [nzLoading]="isEventGridLoadingDetail" [nzScroll]="{ x: '1600px', y: '475px'}">
+                <thead>
+                    <tr>
+                        <th nzWidth="40px" [nzChecked]="checkedDetail" [nzIndeterminate]="indeterminateDetail" (nzCheckedChange)="onAllCheckedDetail($event)"></th>
+                        <th nzWidth="200px">Tiêu đề</th>
+                        <th nzWidth="150px">Thời gian bắt đầu</th>
+                        <th nzWidth="150px">Thời gian kết thúc</th>
+                        <th nzWidth="150px">Địa điểm</th>
+                        <th nzWidth="200px">Ghi chú</th>
+                        <th nzWidth="120px">Người cập nhật</th>
+                        <th nzWidth="150px">Ngày cập nhật</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let data of basicTableDetail.data">
+                        <td [nzChecked]="setOfCheckedIdDetail.has(data.id)" (nzCheckedChange)="onItemCheckedDetail(data.id, $event)">
+                        </td>
+                        <td>{{ data.title }}</td>
+                        <td>{{ data.dateStart | date:'dd/MM/yyyy HH:mm' }}</td>
+                        <td>{{ data.dateEnd | date:'dd/MM/yyyy HH:mm' }}</td>
+                        <td>{{ data.address }}</td>
+                        <td>{{ data.note }}</td>
+                        <td>{{ data.userUpdate }}</td>
+                        <td>{{ data.dateUpdate | date:'dd/MM/yyyy HH:mm' }}</td>
+                    </tr>
+                </tbody>
+            </nz-table>
+        </nz-form-item>
+    </ng-template>
+</nz-modal>
+
+<!-- Form detail -->
+<nz-modal [(nzVisible)]="isShowFormDetail" [nzTitle]="modalTitleDetail" [nzContent]="modalContentDetail" [nzFooter]="modalFooterDetail" [nzMaskClosable]="false" [nzClosable]="false" [nzWidth]="600" (nzOnCancel)="handleCancelDetail()">
+    <ng-template #modalContentDetail>
+        <form nz-form [nzAutoTips]="autoTips" [formGroup]="validateFormDetail" (ngSubmit)="handleSubmitDetail()">
+            <div nz-row [nzGutter]="16">
+                <div nz-col class="gutter-row" [nzSpan]="24">
+                    <nz-form-item>
+                        <nz-form-label [nzSpan]="24" labelAlign="left" nzRequired>Tiêu đề</nz-form-label>
+                        <nz-form-control [nzSpan]="24" nzValidatingTip="Validating...">
+                            <input nz-input formControlName="title" />
+                        </nz-form-control>
+                    </nz-form-item>
+                    <div class="w-50">
+                        <nz-form-item>
+                            <nz-form-label [nzSpan]="24" nzRequired>Thời gian bắt đầu</nz-form-label>
+                            <nz-form-control [nzSpan]="23" nzValidatingTip="Validating...">
+                                <nz-date-picker class="width-date-detail" [nzShowTime]="{ nzFormat: 'HH:mm' }" [nzFormat]="'dd-MM-yyyy HH:mm'" formControlName="dateStart" nzPlaceHolder="Từ ngày..."></nz-date-picker>
+                            </nz-form-control>
+                        </nz-form-item>
+
+                        <nz-form-item>
+                            <nz-form-label [nzSpan]="24">Phòng họp</nz-form-label>
+                            <nz-form-control [nzSpan]="23">
+                                <textarea formControlName="address" nz-input rows="2"></textarea>
+                            </nz-form-control>
+                        </nz-form-item>
+
+                        <nz-form-item>
+                            <nz-form-label [nzSpan]="24" labelAlign="left">Tài liệu đính kèm</nz-form-label>
+                            <nz-form-control [nzSpan]="24">
+                                <a class="mr-4 bt-upload" mat-flat-button (click)="detailUpload.click()">
+                                    <span class="material-icons">file_upload</span> Chọn tệp đính kèm
+                                </a>
+                                <br>
+                                <input #detailUpload class="hide" type="file" (change)="onSelectFileDetail($event)">
+                            </nz-form-control>
+                        </nz-form-item>
+                    </div>
+                    <div class="w-50">
+                        <nz-form-item>
+                            <nz-form-label [nzSpan]="24" nzRequired>Thời gian kết thúc</nz-form-label>
+                            <nz-form-control [nzSpan]="24" nzValidatingTip="Validating...">
+                                <nz-date-picker class="width-date-detail" [nzShowTime]="{ nzFormat: 'HH:mm' }" [nzFormat]="'dd-MM-yyyy HH:mm'" formControlName="dateEnd" nzPlaceHolder="Đến ngày..."></nz-date-picker>
+                            </nz-form-control>
+                        </nz-form-item>
+
+                        <nz-form-item>
+                            <nz-form-label [nzSpan]="24">Nội dung phiên họp</nz-form-label>
+                            <nz-form-control [nzSpan]="24">
+                                <textarea formControlName="note" nz-input rows="2"></textarea>
+                            </nz-form-control>
+                        </nz-form-item>
+
+                        <div class="col-md-12">
+                            <div *ngFor="let file of fileList">
+                                <div class="col-md-10 float-start file-name">
+                                    <span class="">
+                                            {{file.fileName}}
+                                    </span>
+                                </div>
+                                <div class="col-md-2 float-start text-center">
+                                    <span class="material-icons" (click)="removeFile(file.fileName)">
+                                        delete_outline
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </ng-template>
+
+    <ng-template #modalFooterDetail>
+        <button class="mr-4 cl-close" mat-flat-button (click)="handleCancelDetail()">
+            <span class="material-icons">highlight_off</span>
+        </button>
+
+        <button class="cl-save" mat-flat-button (click)="handleSubmitDetail()" [disabled]="isSaveLoadingDetail">
+            <span class="material-icons">save</span>
+        </button>
+    </ng-template>
+</nz-modal>
+
+<!-- Form noti -->
+<nz-modal [(nzVisible)]="isShowFormNoti" [nzTitle]="modalNotiTitle" [nzContent]="modalNotiContent" [nzFooter]="null" [nzMaskClosable]="false" [nzClosable]="false" [nzWidth]="700" (nzOnCancel)="handleCancelNoti()">
+    <ng-template #modalNotiContent>
+        <form nz-form>
+            <div nz-row [nzGutter]="16">
+                <div nz-col class="gutter-row" [nzSpan]="12">
+                    <nz-form-item>
+                        <nz-form-label [nzSpan]="24">Nhân viên</nz-form-label>
+                        <nz-form-control [nzSpan]="24">
+                            <nz-select [(ngModel)]="selectedProfile" nzMode="multiple" [ngModelOptions]="{standalone: true}" nzAllowClear nzPlaceHolder="Vui lòng chọn...">
+                                <nz-option *ngFor="let profile of listProfile" [nzValue]="profile" [nzLabel]="profile.label"></nz-option>
+                            </nz-select>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+
+                <div nz-col class="gutter-row" [nzSpan]="12">
+                    <nz-form-item>
+                        <nz-form-label [nzSpan]="24">Phòng ban</nz-form-label>
+                        <nz-form-control [nzSpan]="24">
+                            <nz-select [(ngModel)]="selectedOrg" nzMode="multiple" [ngModelOptions]="{standalone: true}" nzAllowClear nzPlaceHolder="Vui lòng chọn...">
+                                <nz-option *ngFor="let org of listOrg" [nzValue]="org" [nzLabel]="org.label"></nz-option>
+                            </nz-select>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+            </div>
+        </form>
+
+        <nz-form-item class="bg-white">
+            <!-- toolbar grid -->
+            <div class="col-md-12 form-group">
+                <div class="toolbar-grid">
+                    <div class="float-start">
+                        <a class="mr-4 cl-add" mat-flat-button (click)="addSend()" [disabled]="isNotiLoading">
+                            <span class="material-icons">downloading</span>
+                        </a>
+                        <a class="mr-4 cl-add" mat-flat-button (click)="addSendAll()" [disabled]="isNotiLoading">
+                            <span class="material-icons">downloading</span> All
+                        </a>
+                        <a class="mr-4 cl-noti" mat-flat-button (click)="sendNoti()" [disabled]="isNotiLoading">
+                            <span class="material-icons">send</span>
+                        </a>
+                    </div>
+
+                    <div class="float-end">
+                        <a class="mr-4 cl-delete" mat-flat-button *ngIf="isShowDeleteNoti" (click)="handleDeleteNoti()" [disabled]="isNotiLoading">
+                            <span class="material-icons">delete_forever</span>
+                        </a>
+                        <a class="mr-4 cl-close" mat-flat-button (click)="handleCancelNoti()" [disabled]="isNotiLoading">
+                            <span class="material-icons">highlight_off</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <nz-table #basicTableNoti [nzData]="dataNotiGrid" nzBordered nzSize="middle" [nzPageSize]="20" [nzLoading]="isNotiGridLoading" [nzScroll]="{ x: '1000px', y: '475px'}">
+                <thead>
+                    <tr>
+                        <th nzWidth="40px" [nzChecked]="checkedNoti" [nzIndeterminate]="indeterminateNoti" (nzCheckedChange)="onAllCheckedNoti($event)"></th>
+                        <th nzWidth="80px">Mã nhân viên</th>
+                        <th nzWidth="150px">Tên nhân viên</th>
+                        <th nzWidth="150px">Phòng ban</th>
+                        <th nzWidth="100px">Trạng thái</th>
+                        <th nzWidth="120px">Người cập nhật</th>
+                        <th nzWidth="150px">Ngày cập nhật</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let data of basicTableNoti.data">
+                        <td [nzChecked]="setOfCheckedIdNoti.has(data.id)" (nzCheckedChange)="onItemCheckedNoti(data.id, $event)">
+                        </td>
+                        <td>{{ data.code }}</td>
+                        <td>{{ data.profileName }}</td>
+                        <td>{{ data.orgStructureName }}</td>
+                        <td [class]="data.statusCSS">{{ data.sendView }}</td>
+                        <td>{{ data.userUpdate }}</td>
+                        <td>{{ data.dateUpdate | date:'dd/MM/yyyy HH:mm' }}</td>
+                    </tr>
+                </tbody>
+            </nz-table>
+        </nz-form-item>
+    </ng-template>
+</nz-modal>

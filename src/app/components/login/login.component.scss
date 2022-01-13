@@ -1,0 +1,85 @@
+.container-login100 {
+    width: 100%;
+    background: #f2f2f2;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    flex-direction: row-reverse;
+}
+
+.form-login{
+    width: 460px;
+    min-height: 100vh;
+    display: block;
+    background-color: #fff;
+    padding: 173px 55px 55px 55px; 
+}
+
+.bg-login { 
+    width: calc(100% - 460px);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    z-index: 1;
+    background-image: url(../../../assets/img/bg-01.jpg);
+}
+
+.header-login{
+    background-image: url(../../../assets/img/logo_meeting.png);
+}
+
+.login100-form-title {
+    width: 100%;
+    display: block;
+    font-size: 28px;
+    color: #333333;
+    line-height: 1.2;
+    text-align: center;
+    font-family: Roboto, "Helvetica Neue", sans-serif; 
+}
+
+.p-b-43 {
+    padding-bottom: 43px;
+}
+
+.example-full-width {
+    width: 100%;
+}
+
+input.mat-input-element {
+    margin-top: -0.0625em;
+    height: 25px;
+    font-size: 16px;
+}
+
+:host ::ng-deep .mat-form-field-appearance-fill .mat-form-field-flex {
+    background-color: #f2f7ff !important; 
+}
+
+.example-button-row {
+    display: table-cell;
+    width: 490px;
+}
+
+.wd-btn-login { 
+    width: 100%;
+}
+
+.btn-primary.disabled, .btn-primary:disabled {
+    color: #fff !important;
+    background-color: #0d6efd !important;
+    border-color: #0d6efd;
+}
+
+.example-section {
+    margin: 6px 0;
+}
+  
+.txt-forgot-pw{
+    float: right; 
+    text-align: right; 
+    margin: 6px 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    margin: auto;
+}

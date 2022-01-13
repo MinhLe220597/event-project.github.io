@@ -1,0 +1,26 @@
+.width_birthday {
+    width: 245px;
+}
+
+.ant-upload-list-item-name,
+.ant-upload-picture-card-wrapper {
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+}
+
+:host ::ng-deep .avatar-uploader>.ant-upload {
+    width: 128px;
+    height: 128px;
+}
+
+.img-avatar {
+    width: 135px;
+    height: 135px;
+    object-fit: cover;
+    border-radius: 65px;
+}
+
+.mr-r25 {
+    margin-right: 25px;
+}

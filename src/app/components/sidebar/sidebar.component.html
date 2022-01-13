@@ -1,0 +1,23 @@
+  <mat-sidenav #drawer class="sidenav" fixedInViewport [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+      [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="(isHandset$ | async) === false">
+      <mat-toolbar class="simple-text">
+          <div class="logo-img">
+              <img src="/assets/img/angular2-logo-red.png" />
+          </div>
+          <a>
+              Angular
+          </a>
+      </mat-toolbar>
+      <div class="line-top"></div>
+      <mat-nav-list>
+          <a mat-list-item 
+              *ngFor="let item of listNav"
+              [routerLink]="[item.path]"
+              [ngClass]="{item_selected: clickedItem === item.icon}"
+              (click)="selectNav(item.icon)"
+          >
+              <mat-icon matListIcon>{{item.icon}}</mat-icon>
+              <a matLine>{{item.title}}</a>
+          </a>
+      </mat-nav-list>
+  </mat-sidenav>
