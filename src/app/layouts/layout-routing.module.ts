@@ -12,7 +12,6 @@ import { PostItemComponent } from '../components/post-item/post-item.component';
 import { ListArticleComponent } from '../components/list-article/list-article.component';
 import { EventComponent } from '../components/event/event.component';
 import { ChatBotComponent } from '../components/chat-bot/chat-bot.component';
-import { AuthGuard } from '../_helpers';
 
 const routers: Routes = [
     { path: '', pathMatch: 'full', redirectTo: 'login' },
@@ -20,7 +19,6 @@ const routers: Routes = [
     {
         path: 'admin',
         component: LayoutAdminComponent,
-        canActivate: [AuthGuard], 
         children: [
             {
                 path: 'dashboard',

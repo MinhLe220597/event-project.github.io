@@ -71,15 +71,15 @@ export class LayoutAdminComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    (function (d, m) {
-      var kommunicateSettings =
-        { "appId": "153ada089c8ce06f2eee7966b3de40ccd", "popupWidget": true, "automaticChatOpenOnNavigation": true };
-      var s = document.createElement("script"); s.type = "text/javascript"; s.async = true;
-      s.src = "https://widget.kommunicate.io/v2/kommunicate.app";
-      var h = document.getElementsByTagName("head")[0]; h.appendChild(s);
-      (window as any).kommunicate = m; m._globals = kommunicateSettings;
-    })
-    (document, (window as any).kommunicate || {});
+    // (function (d, m) {
+    //   var kommunicateSettings =
+    //     { "appId": "153ada089c8ce06f2eee7966b3de40ccd", "popupWidget": true, "automaticChatOpenOnNavigation": true };
+    //   var s = document.createElement("script"); s.type = "text/javascript"; s.async = true;
+    //   s.src = "https://widget.kommunicate.io/v2/kommunicate.app";
+    //   var h = document.getElementsByTagName("head")[0]; h.appendChild(s);
+    //   (window as any).kommunicate = m; m._globals = kommunicateSettings;
+    // })
+    // (document, (window as any).kommunicate || {});
   }
 
   selectNav(item: string): void {
