@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 import { UserInfo, UserInfoLogin } from 'src/app/model/userInfo';
 import { UserInfoServices } from 'src/app/services/api/userInfo.service';
 import { LoginServices } from 'src/app/services/login.services';
 import { Services } from 'src/app/services/services';
 import { MesseageServices } from './../../services/messeage.service';
+import { addUserLogin } from '../reducers/user-login.action';
 
 @Component({
   selector: 'app-login',
@@ -27,6 +29,7 @@ export class LoginComponent implements OnInit {
     , private router: Router
     , private userInfoServices: UserInfoServices
     , private services: Services
+    // , private store: Store
   ) {
 
    }
@@ -73,11 +76,12 @@ export class LoginComponent implements OnInit {
       this.loading = false;
       if (data) {
         if (data['messWarning'] == 'Succes') {
-          this.services.userlogin = data['userLogin']?.toString() ?? '';
-          this.services.permission = data['permission']?.toString() ?? '';
-          this.services.image = data['image']?.toString() ?? '';
-          this.services.profileName = data['profileName']?.toString() ?? '';
-
+          // this.services.userlogin = data['userLogin']?.toString() ?? '';
+          // this.services.permission = data['permission']?.toString() ?? '';
+          // this.services.image = data['image']?.toString() ?? '';
+          // this.services.profileName = data['profileName']?.toString() ?? '';
+          debugger
+          // this.store.dispatch(addUserLogin(data));
           this.router.navigate(['/admin']);
         }
         else

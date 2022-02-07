@@ -47,12 +47,19 @@ import { PostItemComponent } from '../components/post-item/post-item.component';
 import { EditorModule } from "@tinymce/tinymce-angular";
 import { ListArticleComponent } from '../components/list-article/list-article.component';
 import { EventComponent } from '../components/event/event.component';
+import { ArticleDetailComponent } from '../components/article-detail/article-detail.component';
+import { ScheduleMeetingComponent } from '../components/schedule-meeting/schedule-meeting.component';
 import { DatePipe } from '@angular/common';
 import { ChatBotComponent } from '../components/chat-bot/chat-bot.component';
+import { StoreModule } from "@ngrx/store";
+import { userLoginReducer } from "../components/reducers/user-login.reducer";
+import { AuthService } from "../services/auth.service";
+import { NzCalendarModule } from 'ng-zorro-antd/calendar';
 
 @NgModule({
     imports: [
         CommonModule,
+        HttpClientModule,
         LayoutRoutingModule,
         BrowserAnimationsModule,
         MatGridListModule,
@@ -68,7 +75,6 @@ import { ChatBotComponent } from '../components/chat-bot/chat-bot.component';
         MatInputModule,
         MatCheckboxModule,
         ToastrModule.forRoot(),
-        HttpClientModule,
         NzTableModule,
         NzCardModule,
         NzIconModule,
@@ -84,7 +90,9 @@ import { ChatBotComponent } from '../components/chat-bot/chat-bot.component';
         NzUploadModule,
         MatRadioModule,
         NzCheckboxModule,
-        EditorModule
+        NzCalendarModule,
+        EditorModule,
+        // StoreModule.forRoot({userLoginEntries: userLoginReducer}),
     ],
     declarations: [
         LayoutAdminComponent,
@@ -99,8 +107,9 @@ import { ChatBotComponent } from '../components/chat-bot/chat-bot.component';
         PostItemComponent,
         ListArticleComponent,
         EventComponent,
-        ChatBotComponent
-        
+        ChatBotComponent,
+        ArticleDetailComponent,
+        ScheduleMeetingComponent
     ],
     exports: [
         ChatBotComponent
@@ -109,7 +118,8 @@ import { ChatBotComponent } from '../components/chat-bot/chat-bot.component';
         { provide: NZ_I18N, useValue: en_US },
         Services,
         NzMessageService,
-        DatePipe
+        DatePipe,
+        AuthService
     ]
 })
 export class LayoutAdminModule {

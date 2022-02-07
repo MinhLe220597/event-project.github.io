@@ -4,6 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { retry, catchError } from 'rxjs/operators';
 import { Category } from 'src/app/model/category';
 import { UploadFile } from 'src/app/model/uploadFile';
+import { ListPost } from 'src/app/model/postItem';
 
 @Injectable({
     providedIn: 'root'
@@ -39,6 +40,13 @@ export class GetDataServices {
 
         return this.http.post<UploadFile>('/api/GetData/UploadImage', formData, this.httpOptionsFormData)
         .pipe(catchError(this.handleError));
+    }
+
+    getListPostByProfileID(dataSeach: any): Observable<ListPost[]> {
+        return this.http.post<ListPost[]>('/api/GetData/GetListPostByProfileID', JSON.stringify(dataSeach), this.httpOptions)
+          .pipe(
+            catchError(this.handleError)
+        );
     }
 
     // Error handling 

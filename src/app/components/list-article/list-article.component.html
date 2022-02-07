@@ -1,0 +1,47 @@
+<div *ngFor="let post of listPost" class="mr-bottom-15">
+    <nz-card>
+        <div class="col-md-12 float-start">
+            <span class="title-section">{{post.categoryName}}</span>
+        </div>
+
+        <div class="col-md-12 float-start" *ngIf="!post.isShowAllPost">
+            <div class="col-md-3 float-start" *ngFor="let postItem of post.listPostItemNotAll">
+                <div class="group-post" (click)="viewDetail(postItem)">
+                    <div class="col-md-12">
+                        <img [src]='postItem.image' class="img-avatar">
+                    </div>
+
+                    <div class="col-md-12">
+                        <span class="post-title">{{postItem.title}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12 float-start" *ngIf="post.isShowAllPost">
+            <div class="col-md-3 float-start" *ngFor="let postItem of post.listPostItem">
+                <div class="group-post">
+                    <div class="col-md-12">
+                        <img [src]='postItem.image' class="img-avatar">
+                    </div>
+
+                    <div class="col-md-12">
+                        <span class="post-title">{{postItem.title}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="!post.isShowAllPost && post.totalItem > 4" class="col-md-12 float-start text-center" (click)="showAllPost(post)">
+            <span class="material-icons">
+                keyboard_double_arrow_down
+            </span>
+        </div>
+
+        <div *ngIf="post.isShowAllPost" class="col-md-12 float-start text-center" (click)="showAllPost(post)">
+            <span class="material-icons">
+                keyboard_double_arrow_up
+            </span>
+        </div>
+    </nz-card>
+</div>

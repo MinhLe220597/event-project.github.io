@@ -5,6 +5,10 @@ import { filter } from 'rxjs/operators'
 import { map, shareReplay } from 'rxjs/operators';
 import { Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
 import { NavigationEnd, NavigationStart, Router } from '@angular/router';
+import { UserInfoLogin } from 'src/app/model/userInfo';
+// import { Store } from '@ngrx/store';
+import { getInfoLogin } from 'src/app/components/reducers/user-login.selector';
+import { Services } from 'src/app/services/services';
 
 @Component({
   selector: 'app-layout-admin',
@@ -15,10 +19,20 @@ export class LayoutAdminComponent implements OnInit {
   location: Location;
   clickedItem = 'dashboard';
   sidebar = [
+    // {
+    //   path: '/admin/dashboard',
+    //   icon: 'dashboard',
+    //   title: 'Trang chủ'
+    // },
     {
-      path: '/admin/dashboard',
-      icon: 'dashboard',
-      title: 'Trang chủ'
+      path: '/admin/schedule-meeting',
+      icon: 'date_range',
+      title: 'Lịch trình'
+    },
+    {
+      path: '/admin/list-article',
+      icon: 'newspaper',
+      title: 'Tin tức'
     },
     {
       path: '/admin/category',
@@ -29,11 +43,6 @@ export class LayoutAdminComponent implements OnInit {
       path: '/admin/post-item',
       icon: 'post_add',
       title: 'DS Bài viết'
-    },
-    {
-      path: '/admin/list-article',
-      icon: 'newspaper',
-      title: 'Tin tức'
     },
     {
       path: '/admin/event',
@@ -57,6 +66,8 @@ export class LayoutAdminComponent implements OnInit {
     },
   ];
 
+  userLogin: Observable<UserInfoLogin> | undefined;
+
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
       map(result => result.matches),
@@ -65,12 +76,17 @@ export class LayoutAdminComponent implements OnInit {
 
   constructor(location: Location
     , private breakpointObserver: BreakpointObserver
-    , private router: Router) {
+    , private router: Router
+    // , private store: Store
+    , private services: Services
+    ) 
+  {
     this.location = location;
-    this.router.navigate(['/admin/dashboard']);
+    this.router.navigate(['/admin/schedule-meeting']);
   }
 
   ngOnInit(): void {
+
     // (function (d, m) {
     //   var kommunicateSettings =
     //     { "appId": "153ada089c8ce06f2eee7966b3de40ccd", "popupWidget": true, "automaticChatOpenOnNavigation": true };
@@ -97,6 +113,10 @@ export class LayoutAdminComponent implements OnInit {
         return this.sidebar[item].title;
       }
     }
+
+    if (title.indexOf('/admin/article-detail?postItemID') != -1)
+      return 'Tin tức';
+
     return 'Dashboard';
   }
 }

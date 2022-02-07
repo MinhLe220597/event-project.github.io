@@ -5,6 +5,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LayoutAdminModule } from './layouts/layout.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { SchedulerModule } from '@progress/kendo-angular-scheduler';
+
 
 @NgModule({
   declarations: [
@@ -13,7 +15,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
   imports: [
     BrowserModule,
     LayoutAdminModule, // <== lưu ý thứ tự import này
-    AppRoutingModule, BrowserAnimationsModule
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    SchedulerModule
   ],
   providers: [],
   bootstrap: [AppComponent]

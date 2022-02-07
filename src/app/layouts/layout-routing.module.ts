@@ -12,6 +12,11 @@ import { PostItemComponent } from '../components/post-item/post-item.component';
 import { ListArticleComponent } from '../components/list-article/list-article.component';
 import { EventComponent } from '../components/event/event.component';
 import { ChatBotComponent } from '../components/chat-bot/chat-bot.component';
+import { ArticleDetailComponent } from '../components/article-detail/article-detail.component';
+import { ScheduleMeetingComponent } from '../components/schedule-meeting/schedule-meeting.component';
+// import { EffectsModule } from '@ngrx/effects';
+// import { AuthService } from '../services/auth.service';
+// import { AuthEffects } from '../store/effects/auth.effects';
 
 const routers: Routes = [
     { path: '', pathMatch: 'full', redirectTo: 'login' },
@@ -20,9 +25,13 @@ const routers: Routes = [
         path: 'admin',
         component: LayoutAdminComponent,
         children: [
+            // {
+            //     path: 'dashboard',
+            //     component: DashboardComponent
+            // },
             {
-                path: 'dashboard',
-                component: DashboardComponent
+                path: 'schedule-meeting',
+                component: ScheduleMeetingComponent
             },
             {
                 path: 'category',
@@ -56,6 +65,10 @@ const routers: Routes = [
                 path: 'chat-bot',
                 component: ChatBotComponent
             },
+            {
+                path: 'article-detail',
+                component: ArticleDetailComponent
+            },
         ]
     },
 
@@ -63,6 +76,7 @@ const routers: Routes = [
 @NgModule({
     imports: [
         CommonModule,
+        // EffectsModule.forRoot([AuthEffects]),
         RouterModule.forChild(routers)
     ],
     declarations: [],
