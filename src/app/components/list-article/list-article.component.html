@@ -20,7 +20,7 @@
 
         <div class="col-md-12 float-start" *ngIf="post.isShowAllPost">
             <div class="col-md-3 float-start" *ngFor="let postItem of post.listPostItem">
-                <div class="group-post">
+                <div class="group-post" (click)="viewDetail(postItem)">
                     <div class="col-md-12">
                         <img [src]='postItem.image' class="img-avatar">
                     </div>
