@@ -5,6 +5,7 @@ import { retry, catchError } from 'rxjs/operators';
 import { Category } from 'src/app/model/category';
 import { UploadFile } from 'src/app/model/uploadFile';
 import { ListPost } from 'src/app/model/postItem';
+import { ScheduleEntity, ScheduleModel } from 'src/app/model/schedule';
 
 @Injectable({
     providedIn: 'root'
@@ -44,6 +45,13 @@ export class GetDataServices {
 
     getListPostByProfileID(dataSeach: any): Observable<ListPost[]> {
         return this.http.post<ListPost[]>('/api/GetData/GetListPostByProfileID', JSON.stringify(dataSeach), this.httpOptions)
+          .pipe(
+            catchError(this.handleError)
+        );
+    }
+
+    getDataScheduleByProfileID(dataSeach: any): Observable<ScheduleModel[]> {
+        return this.http.post<ScheduleModel[]>('/api/GetData/GetDataScheduleByProfileID', JSON.stringify(dataSeach), this.httpOptions)
           .pipe(
             catchError(this.handleError)
         );

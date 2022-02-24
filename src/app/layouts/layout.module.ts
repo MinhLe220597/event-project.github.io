@@ -55,6 +55,8 @@ import { StoreModule } from "@ngrx/store";
 import { userLoginReducer } from "../components/reducers/user-login.reducer";
 import { AuthService } from "../services/auth.service";
 import { NzCalendarModule } from 'ng-zorro-antd/calendar';
+import { ScheduleModule } from '@syncfusion/ej2-angular-schedule';
+import { DayService, WeekService, WorkWeekService, MonthService, AgendaService, MonthAgendaService } from '@syncfusion/ej2-angular-schedule';
 
 @NgModule({
     imports: [
@@ -92,6 +94,7 @@ import { NzCalendarModule } from 'ng-zorro-antd/calendar';
         NzCheckboxModule,
         NzCalendarModule,
         EditorModule,
+        ScheduleModule
         // StoreModule.forRoot({userLoginEntries: userLoginReducer}),
     ],
     declarations: [
@@ -119,7 +122,13 @@ import { NzCalendarModule } from 'ng-zorro-antd/calendar';
         Services,
         NzMessageService,
         DatePipe,
-        AuthService
+        AuthService,
+        DayService,
+        WeekService,
+        WorkWeekService,
+        MonthService,
+        AgendaService,
+        MonthAgendaService
     ]
 })
 export class LayoutAdminModule {

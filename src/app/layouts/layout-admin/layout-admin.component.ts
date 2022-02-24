@@ -17,7 +17,7 @@ import { Services } from 'src/app/services/services';
 })
 export class LayoutAdminComponent implements OnInit {
   location: Location;
-  clickedItem = 'dashboard';
+  clickedItem = 'date_range';
   sidebar = [
     // {
     //   path: '/admin/dashboard',

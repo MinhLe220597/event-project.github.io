@@ -1,21 +1,62 @@
-import { Component, OnInit } from '@angular/core';
-import { NzCalendarMode } from 'ng-zorro-antd/calendar';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { EventSettingsModel, DayService, WeekService, WorkWeekService, MonthService, AgendaService, Schedule, ActionEventArgs, NavigatingEventArgs, ScheduleComponent } from '@syncfusion/ej2-angular-schedule';
+import { ScheduleEntity, ScheduleModel } from 'src/app/model/schedule';
+import { GetDataServices } from 'src/app/services/api/getData.service';
 
 @Component({
   selector: 'schedule-meeting',
   templateUrl: './schedule-meeting.component.html',
-  styleUrls: ['./schedule-meeting.component.scss']
+  styleUrls: ['./schedule-meeting.component.scss'],
+  providers: [DayService, WeekService, WorkWeekService, MonthService, AgendaService],
 })
 export class ScheduleMeetingComponent implements OnInit {
-  date = new Date();
-  mode: NzCalendarMode = 'month';
+  @ViewChild("scheduleObj")
+  public scheduleObj!: ScheduleComponent;
+  public selectedDate: Date = new Date();
+  public eventSettings: EventSettingsModel = {
+    dataSource: [],
+    allowAdding: false,
+    allowEditing: false,
+    allowDeleting: false
+  };
 
-  constructor() { }
+  public showWeekNumber: boolean = false;
+  constructor(public getDataServices: GetDataServices) {
+
+  }
 
   ngOnInit(): void {
+    this.getSourceSchedule();
   }
 
-  panelChange(change: { date: Date; mode: string }): void {
-    console.log(change.date, change.mode);
+  getSourceSchedule() {
+    var objSearch = {
+      "ProfileID": 'fd1a023e-94ea-456e-0b4a-08d9c55d3987',
+      "WorkDate": this.selectedDate
+    };
+    this.getDataServices.getDataScheduleByProfileID(objSearch).subscribe((data: ScheduleModel[]) => {
+      var source: ScheduleEntity[] = [];
+      data.forEach(function (item) {
+        var schedule = new ScheduleEntity;
+        schedule.Id = item.id;
+        schedule.Subject = item.subject;
+        schedule.StartTime = item.startTime;
+        schedule.EndTime = item.endTime;
+        schedule.Location = item.location;
+        schedule.Description = item.description;
+
+        source.push(schedule);
+      });
+
+      this.scheduleObj.eventSettings.dataSource = source;
+    });
   }
+
+  public onNavigating(args: NavigatingEventArgs): void {
+    if (args.name == 'navigating') {
+      this.selectedDate = args.currentDate as Date;
+      this.getSourceSchedule();
+    }
+  }
+
 }
