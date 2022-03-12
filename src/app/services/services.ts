@@ -8,5 +8,5 @@ export class Services {
   permission = '';
   profileName = '';
   image= 'assets/img/new_logo.png';
-  urlApi = "http://42.112.199.127:3389/";
+  urlApi = "http://183.80.101.24:3389/";
 }

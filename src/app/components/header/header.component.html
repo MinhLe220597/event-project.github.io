@@ -17,8 +17,57 @@
                 <span class="notification">5</span>
             </div>
             <div class="wth-icon-more text-center mr-top-4">
-                <img [src]="avatar" class="rounded-circle h-w-avatar">
+                <img [src]="avatar" class="rounded-circle h-w-avatar" (click)="clickMenu()">
+                <div class="dropdown-menu dropdown-menu-cl" *ngIf="isShowMenu">
+                    <a class="dropdown-item cl-menu-info">Xin chào! {{userLogin}}</a>
+                    <div class="menu-line"></div>
+                    <a class="dropdown-item" (click)="showAdd()">Đổi mật khẩu</a>
+                    <div class="menu-line"></div>
+                    <a class="dropdown-item" (click)="logout()">Thoát</a>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Form add/edit -->
+<nz-modal [(nzVisible)]="isShowFormAdd" [nzTitle]="modalTitle" [nzContent]="modalContent" [nzFooter]="modalFooter" [nzMaskClosable]="false" [nzClosable]="false" (nzOnCancel)="handleCancel()">
+    <ng-template #modalContent>
+        <form nz-form [nzAutoTips]="autoTips" [formGroup]="validateFormAddOrEdit" (ngSubmit)="handleSubmit()">
+            <nz-form-item>
+                <nz-form-label [nzSpan]="8" labelAlign="left" nzRequired>Mật khẩu cũ</nz-form-label>
+                <nz-form-control [nzSpan]="14" nzValidatingTip="Validating...">
+                    <!-- <input nz-input formControlName="passOld" /> -->
+                    <input [type]="passwordVisible ? 'text' : 'password'" nz-input formControlName="passOld" />
+                </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+                <nz-form-label [nzSpan]="8" nzRequired>Mật khẩu mới</nz-form-label>
+                <nz-form-control [nzSpan]="14" nzValidatingTip="Validating...">
+                    <!-- <input nz-input formControlName="passNew" /> -->
+                    <input [type]="passwordVisible ? 'text' : 'password'" nz-input formControlName="passNew" />
+                </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+                <nz-form-label [nzSpan]="8" nzRequired>Xác nhận mật khẩu</nz-form-label>
+                <nz-form-control [nzSpan]="14" nzValidatingTip="Validating...">
+                    <!-- <input nz-input formControlName="rePassNew" /> -->
+                    <input [type]="passwordVisible ? 'text' : 'password'" nz-input formControlName="rePassNew" />
+                </nz-form-control>
+            </nz-form-item>
+
+        </form>
+    </ng-template>
+
+    <ng-template #modalFooter>
+        <button class="mr-4 cl-close" mat-flat-button (click)="handleCancel()" [disabled]="isSaveLoading">
+            <span class="material-icons">highlight_off</span>
+        </button>
+
+        <button class="cl-save" mat-flat-button (click)="handleSubmit()" [disabled]="isSaveLoading">
+            <span class="material-icons">save</span>
+        </button>
+    </ng-template>
+</nz-modal>

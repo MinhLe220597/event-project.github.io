@@ -71,10 +71,10 @@ export class UserInfoServices {
                 .pipe(
                     retry(1),
                     catchError(this.handleError)
-                ); 
+                );
     }
 
-    // Error handling 
+    // Error handling
     handleError(error: { error: { message: string; }; status: any; message: any; }) {
         let errorMessage = '';
         if (error.error instanceof ErrorEvent) {
@@ -101,6 +101,10 @@ export class UserInfoServices {
         );
     }
 
+    public setUserInfo(userData: UserInfoLogin): void {
+      this.currentUserSubject.next(userData)
+    }
+
     public get currentUserValue(): UserInfoLogin {
         return this.currentUserSubject.value;
     }
@@ -109,5 +113,28 @@ export class UserInfoServices {
         // remove user from local storage to log user out
         localStorage.removeItem('currentUser');
         this.currentUserSubject.next({});
+    }
+
+    changePassword(dataSeach: any): Observable<UserInfoLogin> {
+        return this.http.post<UserInfoLogin>('/api/UserInfo/ChangePassword', JSON.stringify(dataSeach), this.httpOptions)
+          .pipe(
+            map(user => {
+                // store user details and jwt token in local storage to keep user logged in between page refreshes
+                // localStorage.setItem('currentUser', JSON.stringify(user));
+                // this.currentUserSubject.next(user);
+                return user;
+            }),
+            catchError(this.handleError)
+        );
+    }
+
+    resetPassword(dataSeach: any): Observable<UserInfoLogin> {
+        return this.http.post<UserInfoLogin>('/api/UserInfo/ResetPassword', JSON.stringify(dataSeach), this.httpOptions)
+          .pipe(
+            map(user => {
+                return user;
+            }),
+            catchError(this.handleError)
+        );
     }
 }

@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { EventSettingsModel, DayService, WeekService, WorkWeekService, MonthService, AgendaService, Schedule, ActionEventArgs, NavigatingEventArgs, ScheduleComponent } from '@syncfusion/ej2-angular-schedule';
 import { ScheduleEntity, ScheduleModel } from 'src/app/model/schedule';
 import { GetDataServices } from 'src/app/services/api/getData.service';
+import { Services } from 'src/app/services/services';
 
 @Component({
   selector: 'schedule-meeting',
@@ -21,7 +22,9 @@ export class ScheduleMeetingComponent implements OnInit {
   };
 
   public showWeekNumber: boolean = false;
-  constructor(public getDataServices: GetDataServices) {
+  constructor(public getDataServices: GetDataServices
+    , private services: Services
+    ) {
 
   }
 
@@ -31,7 +34,7 @@ export class ScheduleMeetingComponent implements OnInit {
 
   getSourceSchedule() {
     var objSearch = {
-      "ProfileID": 'fd1a023e-94ea-456e-0b4a-08d9c55d3987',
+      "ProfileID": this.services.profileID,
       "WorkDate": this.selectedDate
     };
     this.getDataServices.getDataScheduleByProfileID(objSearch).subscribe((data: ScheduleModel[]) => {

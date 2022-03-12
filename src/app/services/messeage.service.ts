@@ -5,7 +5,7 @@ import { ToastrService } from 'ngx-toastr';
     providedIn: 'root'
 })
 export class MesseageServices {
-    $BOTTOM_RIGHT = "toast-bottom-right";
+    $BOTTOM_RIGHT = "toast-bottom-left";
 
     constructor ( private toastr : ToastrService ){
 

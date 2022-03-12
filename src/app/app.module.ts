@@ -5,8 +5,11 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LayoutAdminModule } from './layouts/layout.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { SchedulerModule } from '@progress/kendo-angular-scheduler';
-
+import { StoreModule } from '@ngrx/store';
+import { reducers, metaReducers } from './store/reducers';
+import { EffectsModule } from '@ngrx/effects';
+import { UserEffects } from './store/user/effects';
+import { StoreRouterConnectingModule } from '@ngrx/router-store';
 
 @NgModule({
   declarations: [
@@ -17,7 +20,10 @@ import { SchedulerModule } from '@progress/kendo-angular-scheduler';
     LayoutAdminModule, // <== lưu ý thứ tự import này
     AppRoutingModule,
     BrowserAnimationsModule,
-    SchedulerModule
+     //ngrx
+     StoreModule.forRoot(reducers, { metaReducers }),
+     EffectsModule.forRoot([UserEffects]),
+     StoreRouterConnectingModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent]

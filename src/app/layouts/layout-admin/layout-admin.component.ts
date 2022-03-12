@@ -6,9 +6,8 @@ import { map, shareReplay } from 'rxjs/operators';
 import { Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
 import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { UserInfoLogin } from 'src/app/model/userInfo';
-// import { Store } from '@ngrx/store';
-import { getInfoLogin } from 'src/app/components/reducers/user-login.selector';
 import { Services } from 'src/app/services/services';
+import { UserInfoServices } from 'src/app/services/api/userInfo.service';
 
 @Component({
   selector: 'app-layout-admin',
@@ -19,6 +18,14 @@ export class LayoutAdminComponent implements OnInit {
   location: Location;
   clickedItem = 'date_range';
   sidebar = [
+    {
+      path: '',
+      icon: '',
+      title: ''
+    },
+  ];
+
+  sourceAdmin = [
     // {
     //   path: '/admin/dashboard',
     //   icon: 'dashboard',
@@ -66,6 +73,19 @@ export class LayoutAdminComponent implements OnInit {
     },
   ];
 
+  sourcePerson = [
+    {
+      path: '/admin/schedule-meeting',
+      icon: 'date_range',
+      title: 'Lịch trình'
+    },
+    {
+      path: '/admin/list-article',
+      icon: 'newspaper',
+      title: 'Tin tức'
+    },
+  ];
+
   userLogin: Observable<UserInfoLogin> | undefined;
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
@@ -77,25 +97,42 @@ export class LayoutAdminComponent implements OnInit {
   constructor(location: Location
     , private breakpointObserver: BreakpointObserver
     , private router: Router
-    // , private store: Store
+    , private userInfoServices: UserInfoServices
     , private services: Services
-    ) 
-  {
-    this.location = location;
-    this.router.navigate(['/admin/schedule-meeting']);
+  ) {
+    var user = this.userInfoServices.currentUserValue;
+    if (user.permission == 'admin')
+      this.sidebar = this.sourceAdmin;
+    else
+      this.sidebar = this.sourcePerson;
+
+    if (user.image && user.image != '')
+      this.services.image = user.image;
+
+    if (user.profileID && user.profileID != '')
+      this.services.profileID = user.profileID;
+
+    if (user.userLogin && user.userLogin != '')
+      this.services.userlogin = user.userLogin;
+
+    if (user.permission && user.permission != '')
+      this.services.permission = user.permission;
+
+      this.location = location;
+      this.router.navigate(['/admin/schedule-meeting']);
   }
 
   ngOnInit(): void {
 
-    // (function (d, m) {
-    //   var kommunicateSettings =
-    //     { "appId": "153ada089c8ce06f2eee7966b3de40ccd", "popupWidget": true, "automaticChatOpenOnNavigation": true };
-    //   var s = document.createElement("script"); s.type = "text/javascript"; s.async = true;
-    //   s.src = "https://widget.kommunicate.io/v2/kommunicate.app";
-    //   var h = document.getElementsByTagName("head")[0]; h.appendChild(s);
-    //   (window as any).kommunicate = m; m._globals = kommunicateSettings;
-    // })
-    // (document, (window as any).kommunicate || {});
+    (function (d, m) {
+      var kommunicateSettings =
+        { "appId": "ed02ebf0b737f3b969fc830f4b0181b8", "popupWidget": true, "automaticChatOpenOnNavigation": true };
+      var s = document.createElement("script"); s.type = "text/javascript"; s.async = true;
+      s.src = "https://widget.kommunicate.io/v2/kommunicate.app";
+      var h = document.getElementsByTagName("head")[0]; h.appendChild(s);
+      (window as any).kommunicate = m; m._globals = kommunicateSettings;
+    })
+    (document, (window as any).kommunicate || {});
   }
 
   selectNav(item: string): void {
